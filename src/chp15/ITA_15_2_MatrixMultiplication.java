@@ -1,8 +1,8 @@
-package all;
+package chp15;
 
 import java.util.Random;
 
-public class DP_MatrixMultiplication {
+public class ITA_15_2_MatrixMultiplication {
 
 	public static void main(String[] args) {
 		

@@ -1,4 +1,4 @@
-package chapter15;
+package chp15;
 
 public class ITA_15_3_LongestCommonSubsequence {
 	

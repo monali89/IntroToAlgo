@@ -1,6 +1,6 @@
-package all;
+package chp02;
 
-public class InsertionSort {
+public class ITA_2_1_InsertionSort {
 
 	public static void main(String[] args) {
 		
