@@ -39,7 +39,7 @@ public class Temp {
         boolean[] isVisited = new boolean[n];
         dfs(0, isVisited);
 
-        return restrictedPaths;
+        return restrictedPaths % 1000000007;
     }
 
     public void dfs(int u, boolean[] isVisited) {
@@ -106,8 +106,14 @@ public class Temp {
         /*int n = 5;
         int[][] edges = {{1,2,3},{1,3,3},{2,3,1},{1,4,2},{5,2,2},{3,5,1},{5,4,10}};*/
 
-        int n = 7;
-        int[][] edges = {{1,3,1},{4,1,2},{7,3,4},{2,5,3},{5,6,1},{6,7,2},{7,5,3},{2,6,4}};
+        /*int n = 7;
+        int[][] edges = {{1,3,1},{4,1,2},{7,3,4},{2,5,3},{5,6,1},{6,7,2},{7,5,3},{2,6,4}};*/
+
+        int n = 9;
+        int[][] edges = {{6,2,35129},{3,4,99499},{2,7,43547},{8,1,78671},{2,1,66308},
+                {9,6,33462},{5,1,48249},{2,3,44414},{6,7,44602},{1,7,14931},{8,9,38171},
+                {4,5,30827},{3,9,79166},{4,8,93731},{5,9,64068},{7,5,17741},{6,3,76017},
+                {9,4,72244}};
 
         System.out.println("restrictedPaths: " + object.countRestrictedPaths(n, edges));
     }
