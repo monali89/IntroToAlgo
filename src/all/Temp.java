@@ -1,16 +1,10 @@
 package all;
 
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
 public class Temp {
-
-    public static void main(String[] args) {
-        Temp object = new Temp();
-        int n = 5;
-        int[][] edges = {{1,2,3},{1,3,3},{2,3,1},{1,4,2},{5,2,2},{3,5,1},{5,4,10}};
-        System.out.println("restrictedPaths - " + object.countRestrictedPaths(n, edges));
-    }
 
     private double[][] adj;
     private double[] dist;
@@ -19,15 +13,23 @@ public class Temp {
     private int restrictedPaths;
     private int end;
 
+    enum Color {
+        WHITE,
+        GREY,
+        BLACK
+    }
+    private Color[] mark;
+
     public int countRestrictedPaths(int n, int[][] edges) {
 
-        restrictedPaths  = -1;
+        restrictedPaths  = 0;
         end = n;
 
         // initialize graph
         adj = new double[n][n];
         for (int[] e: edges) {
             adj[e[0]-1][e[1]-1] = e[2];
+            adj[e[1]-1][e[0]-1] = e[2];
         }
 
         // Dijkstra to calculate min distances
@@ -35,21 +37,22 @@ public class Temp {
 
         // dfs to get the paths
         boolean[] isVisited = new boolean[n];
-        dfs(1, isVisited);
+        dfs(0, isVisited);
 
         return restrictedPaths;
     }
 
     public void dfs(int u, boolean[] isVisited) {
         isVisited[u] = true;
-        if (u == end) {
+        if (u == end-1) {
             restrictedPaths++;
             return;
         }
         for (int v = 0; v < adj[u].length; v++) {
-            if (v == u) continue;
-            if (!isVisited[v] && v > u) {
+            if (v == u || adj[v][u] == 0) continue;
+            if (!isVisited[v] && v > u && dist[v] < dist[u]) {
                 dfs(v, isVisited);
+                isVisited[v] = false;
             }
         }
     }
@@ -58,18 +61,22 @@ public class Temp {
         dist = new double[n];
         prev = new int[n];
         pq = new PriorityQueue<Integer>(n, new DistanceComparator());
+        mark = new Color[n];
+        Arrays.fill(mark, Color.WHITE);
 
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n-1; i++) {
             dist[i] = Double.POSITIVE_INFINITY;
             prev[i] = -1;
             pq.add(i);
         }
-        dist[end-1] = 0;
+        dist[n-1] = 0;
+        pq.add(n-1);
 
         while (!pq.isEmpty()) {
             int u = pq.remove();
+            mark[u] = Color.GREY;
             for (int v = 0; v < adj[u].length; v++) {
-                if (v == u || adj[u][v] == 0) continue;
+                if (v == u || adj[u][v] == 0 || mark[v] == Color.BLACK) continue;
                 if (dist[v] > (dist[u] + adj[u][v])) {
                     pq.remove(v);
                     dist[v] = dist[u] + adj[u][v];
@@ -77,19 +84,31 @@ public class Temp {
                     pq.add(v);
                 }
             }
+            mark[u] = Color.BLACK;
         }
 
         for (int i = 0; i < dist.length; i++) {
-            System.out.print(dist[i] + " ");
+            System.out.printf("%s | %s | %2s", i, prev[i], dist[i]);
+            System.out.println();
         }
-        System.out.println();
     }
 
     public class DistanceComparator implements Comparator<Integer> {
-
         @Override
         public int compare(Integer o1, Integer o2) {
-            return (int) (dist[o2] - dist[o1]);
+            return (int) (dist[o1] - dist[o2]);
         }
+    }
+
+    public static void main(String[] args) {
+        Temp object = new Temp();
+
+        /*int n = 5;
+        int[][] edges = {{1,2,3},{1,3,3},{2,3,1},{1,4,2},{5,2,2},{3,5,1},{5,4,10}};*/
+
+        int n = 7;
+        int[][] edges = {{1,3,1},{4,1,2},{7,3,4},{2,5,3},{5,6,1},{6,7,2},{7,5,3},{2,6,4}};
+
+        System.out.println("restrictedPaths: " + object.countRestrictedPaths(n, edges));
     }
 }
